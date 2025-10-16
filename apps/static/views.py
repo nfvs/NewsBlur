@@ -100,14 +100,14 @@ def haproxy_check(request):
 def postgres_check(request):
     feed = Feed.objects.latest("pk").pk
     if feed:
-        return HttpResponse(str(feed))
+        return HttpResponse(unicode(feed))
     assert False, "Cannot read from postgres database"
 
 
 def mongo_check(request):
     stories = MStory.objects.count()
     if stories:
-        return HttpResponse(str(stories))
+        return HttpResponse(unicode(stories))
     assert False, "Cannot read from mongo database"
 
 
@@ -129,7 +129,7 @@ def redis_check(request):
 
     key = r.randomkey()
     if key:
-        return HttpResponse(str(key))
+        return HttpResponse(unicode(key))
     assert False, "Cannot read from redis-%s database" % pool
 
 

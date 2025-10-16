@@ -277,7 +277,8 @@ class FetchFeed:
                 forbidden_status, forbidden_feed = self.fetch_forbidden()
                 if forbidden_status == 304:
                     logging.debug(
-                        "   ---> [%-30s] ~FGForbidden feed not modified (304)" % (self.feed.log_title[:30])
+                        "   ---> [%-30s] ~FGForbidden feed not modified (304)"
+                        % (self.feed.log_title[:30])
                     )
                     self.feed = self.feed.save()
                     self.feed.save_feed_history(304, "Not modified")
@@ -520,7 +521,8 @@ class FetchFeed:
 
             if response.status_code == 304:
                 logging.debug(
-                    "   ***> [%-30s] ~FGScrapingBee returned 304 Not Modified" % (self.feed.log_title[:30],)
+                    "   ***> [%-30s] ~FGScrapingBee returned 304 Not Modified"
+                    % (self.feed.log_title[:30],)
                 )
                 return response.status_code, None
 
@@ -534,8 +536,7 @@ class FetchFeed:
             body = smart_str(response.content)
             if not body:
                 logging.debug(
-                    "   ***> [%-30s] ~FRScrapingBee fetch failed: empty response"
-                    % (self.feed.log_title[:30],)
+                    "   ***> [%-30s] ~FRScrapingBee fetch failed: empty response" % (self.feed.log_title[:30],)
                 )
                 return response.status_code, None
 

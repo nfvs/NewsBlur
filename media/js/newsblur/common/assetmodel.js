@@ -583,8 +583,6 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
                     feed_address: feed.get('feed_address'),
                     order: this.view_setting(feed_id, 'order'),
                     read_filter: this.view_setting(feed_id, 'read_filter'),
-                    date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-                    date_filter_end: NEWSBLUR.reader.flags.date_filter_end,
                     query: NEWSBLUR.reader.flags.search,
                     include_hidden: true
                 }, pre_callback,
@@ -714,8 +712,6 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             order: this.view_setting('starred', 'order'),
             tag: tag,
             highlights: highlights,
-            date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-            date_filter_end: NEWSBLUR.reader.flags.date_filter_end,
             v: 2
         }, pre_callback, error_callback, {
             'ajax_group': (page ? 'feed_page' : 'feed'),
@@ -742,9 +738,7 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
         this.make_request('/reader/read_stories', {
             page: page,
             query: NEWSBLUR.reader.flags.search,
-            order: this.view_setting('read', 'order'),
-            date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-            date_filter_end: NEWSBLUR.reader.flags.date_filter_end
+            order: this.view_setting('read', 'order')
         }, pre_callback, error_callback, {
             'ajax_group': (page ? 'feed_page' : 'feed'),
             'request_type': 'GET'
@@ -758,8 +752,6 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             page: page,
             order: this.view_setting(feed_id, 'order'),
             read_filter: this.view_setting(feed_id, 'read_filter'),
-            date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-            date_filter_end: NEWSBLUR.reader.flags.date_filter_end,
             query: NEWSBLUR.reader.flags.search,
             include_hidden: true,
             infrequent: false
@@ -803,8 +795,6 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             page: page,
             order: this.view_setting(feed_id, 'order'),
             read_filter: this.view_setting(feed_id, 'read_filter'),
-            date_filter_start: options.date_filter_start,
-            date_filter_end: options.date_filter_end,
             query: options.query,
             limit: 5,
             infrequent: false,
@@ -917,9 +907,7 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             page: page,
             order: this.view_setting(feed_id, 'order'),
             global_feed: options.global,
-            read_filter: this.view_setting(feed_id, 'read_filter'),
-            date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-            date_filter_end: NEWSBLUR.reader.flags.date_filter_end
+            read_filter: this.view_setting(feed_id, 'read_filter')
         }, pre_callback, error_callback, {
             'ajax_group': (page ? 'feed_page' : 'feed'),
             'request_type': 'GET'
@@ -940,8 +928,6 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             page: page,
             order: this.view_setting(feed_id, 'order'),
             read_filter: this.view_setting(feed_id, 'read_filter'),
-            date_filter_start: NEWSBLUR.reader.flags.date_filter_start,
-            date_filter_end: NEWSBLUR.reader.flags.date_filter_end,
             query: NEWSBLUR.reader.flags.search
         }, pre_callback, error_callback, {
             'ajax_group': (page > 1 ? 'feed_page' : 'feed'),
@@ -1509,17 +1495,9 @@ NEWSBLUR.AssetModel = Backbone.Router.extend({
             view_settings = { 'view': view_settings };
         }
         var params = { 'feed_id': feed_id + '' };
-        _.each([
-            'view',
-            'order',
-            'read_filter',
-            'layout',
-            'dashboard_count',
-            'stories_discover'
-        ], function (facet) {
-            if (setting.hasOwnProperty(facet)) {
-                var key = facet.substr(0, 1);
-                view_settings[key] = setting[facet];
+        _.each(['view', 'order', 'read_filter', 'layout', 'dashboard_count', 'stories_discover'], function (facet) {
+            if (setting[facet]) {
+                view_settings[facet.substr(0, 1)] = setting[facet];
                 params['feed_' + facet + '_setting'] = setting[facet];
             }
         });
