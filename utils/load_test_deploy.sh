@@ -9,7 +9,6 @@ DURATION=120
 CONCURRENCY=5
 RATE=10
 TARGET=""
-STATIC=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -21,10 +20,6 @@ while [[ $# -gt 0 ]]; do
         --app)
             TARGET="app"
             URL="https://newsblur.com/_haproxychk"
-            shift
-            ;;
-        --static)
-            STATIC="_static"
             shift
             ;;
         --duration)
@@ -51,9 +46,6 @@ if [ -z "$TARGET" ]; then
     exit 1
 fi
 
-# Append _static if static flag was set
-DEPLOY_TARGET="${TARGET}${STATIC}"
-
 # Create temp files
 HEY_OUTPUT=$(mktemp)
 DEPLOY_OUTPUT=$(mktemp)
@@ -64,7 +56,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo ""
-echo "🚀 Starting load test deployment to $DEPLOY_TARGET..."
+echo "🚀 Starting load test deployment to $TARGET..."
 echo ""
 echo "Starting load testing: $URL"
 echo "  Duration: ${DURATION}s, Concurrency: $CONCURRENCY, Rate: $RATE req/s/worker"
@@ -78,11 +70,11 @@ HEY_PID=$!
 sleep 3
 
 # Trigger deployment
-echo "Triggering deployment: make $DEPLOY_TARGET"
+echo "Triggering deployment: make $TARGET"
 echo ""
 
 cd /Users/sclay/projects/newsblur
-make $DEPLOY_TARGET > "$DEPLOY_OUTPUT" 2>&1
+make $TARGET > "$DEPLOY_OUTPUT" 2>&1
 DEPLOY_EXIT=$?
 
 # Wait for hey to finish
